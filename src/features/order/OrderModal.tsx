@@ -92,10 +92,14 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
     }));
 
     openWhatsApp(form, orderItems, subtotal);
-    clearCart();
-    closeCart();
-    onClose();
-    setForm(INITIAL_FORM);
+
+    // Dar margen para que el protocolo o ventana de WhatsApp se abra antes de limpiar el estado
+    setTimeout(() => {
+      clearCart();
+      closeCart();
+      onClose();
+      setForm(INITIAL_FORM);
+    }, 1200);
   };
 
   return (

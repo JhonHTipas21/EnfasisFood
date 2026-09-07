@@ -1,6 +1,6 @@
 // ================================================================
-// ÉNFASIS FOOD — WhatsApp Service (Ticket Creativo)
-// Principio SOLID: Single Responsibility — Formateo y envío de tickets
+// ÉNFASIS FOOD — WhatsApp Service (Ticket Creativo & Redirección Garantizada)
+// Principio SOLID: Single Responsibility
 // ================================================================
 import { CONTACT, formatPrice } from '../constants/business';
 import type { OrderFormData, OrderItem } from '../types';
@@ -26,41 +26,36 @@ export const buildOrderMessage = (
   });
 
   const itemLines = items
-    .map((item) => `│  ▫️ *${item.quantity}x* ${item.name}\n│     └─ ${formatPrice(item.price * item.quantity)}`)
+    .map((item) => `• *${item.quantity}x* ${item.name} -> ${formatPrice(item.price * item.quantity)}`)
     .join('\n');
 
-  const deliveryBadge = isDelivery ? '🛵 Domicilio a tu puerta' : '🏬 Recoger en punto / Local';
-  const paymentBadge = formData.paymentMethod === 'nequi' ? '💜 Nequi (Transferencia)' : '💵 Efectivo (Contra entrega)';
+  const deliveryBadge = isDelivery ? '🛵 Domicilio (+$3.000)' : '🏬 Recoger en local ($0)';
+  const paymentBadge = formData.paymentMethod === 'nequi' ? '💜 Nequi' : '💵 Efectivo contra entrega';
 
   return [
-    `╔═══════════════════════════╗`,
-    `║   🍟 *ÉNFASIS FOOD* 🍟    ║`,
-    `║    _Ticket Oficial de Pedido_   ║`,
-    `╚═══════════════════════════╝`,
+    `*📋 ÉNFASIS FOOD — TICKET DE PEDIDO 📋*`,
+    `----------------------------------------`,
     `📅 *Fecha:* ${dateStr} - ${timeStr}`,
     ``,
     `👤 *DATOS DEL CLIENTE:*`,
-    `├ 🏷️ *Nombre:* ${formData.name}`,
-    `├ 📱 *Teléfono:* ${formData.phone}`,
-    `├ 🛵 *Modalidad:* ${deliveryBadge}`,
-    isDelivery ? `└ 📍 *Dirección:* ${formData.address}` : `└ 📍 *Entrega:* Recoge en local`,
+    `• *Nombre:* ${formData.name}`,
+    `• *Teléfono:* ${formData.phone}`,
+    `• *Entrega:* ${deliveryBadge}`,
+    isDelivery ? `• *Dirección:* ${formData.address}` : `• *Punto:* Recoger en local`,
     ``,
-    `📋 *DETALLE DEL PEDIDO:*`,
-    `┌───────────────────────────┐`,
+    `----------------------------------------`,
+    `🛒 *DETALLE DEL PEDIDO:*`,
     itemLines,
-    `└───────────────────────────┘`,
-    ``,
-    `💳 *LIQUIDACIÓN:*`,
-    `├ 💰 *Subtotal:* ${formatPrice(subtotal)}`,
-    `├ 🛵 *Domicilio:* ${isDelivery ? formatPrice(deliveryCost) : 'GRATIS ($0)'}`,
-    `└ 🏷️ *TOTAL A PAGAR:* *${formatPrice(total)}*`,
-    ``,
-    `💵 *Método de pago:* ${paymentBadge}`,
+    `----------------------------------------`,
+    `💰 *Subtotal:* ${formatPrice(subtotal)}`,
+    `🛵 *Domicilio:* ${isDelivery ? formatPrice(deliveryCost) : 'GRATIS ($0)'}`,
+    `🏷️ *TOTAL A PAGAR:* *${formatPrice(total)}*`,
+    `----------------------------------------`,
+    `💳 *Método de pago:* ${paymentBadge}`,
     formData.notes ? `📝 *Instrucciones:* ${formData.notes}` : '',
-    ``,
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-    `✨ _¡Muchas gracias por elegir Énfasis Food!_`,
-    `🍟 _Sabor que marca la diferencia._`,
+    `----------------------------------------`,
+    `✨ _¡Muchas gracias por preferir Énfasis Food!_`,
+    `_Sabor que marca la diferencia._`,
   ]
     .filter(Boolean)
     .join('\n');
@@ -82,5 +77,22 @@ export const openWhatsApp = (
   subtotal: number
 ): void => {
   const url = buildWhatsAppUrl(formData, items, subtotal);
-  window.open(url, '_blank', 'noopener,noreferrer');
+
+  // Redirección infalible a WhatsApp sin ser bloqueada por navegadores móviles o popups:
+  try {
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch {
+    // Si el navegador bloquea la apertura de enlace
+  }
+
+  // Redirección directa de respaldo garantizada en la ventana activa
+  setTimeout(() => {
+    window.location.href = url;
+  }, 250);
 };
