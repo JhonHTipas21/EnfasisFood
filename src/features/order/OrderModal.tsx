@@ -2,7 +2,7 @@
 // ÉNFASIS FOOD — Order Modal Feature (Pedido + Entrega + Pago)
 // ================================================================
 import { useState } from 'react';
-import { ShoppingBag, Bike, Store } from 'lucide-react';
+import { ShoppingBag, Bike, Store, Copy, Check } from 'lucide-react';
 import { Modal } from '../../components/ui/Modal';
 import { Button } from '../../components/ui/Button';
 import { useCartStore } from '../../stores/cartStore';
@@ -10,7 +10,7 @@ import { openWhatsApp } from '../../services/whatsappService';
 import { formatPrice, CONTACT } from '../../constants/business';
 import type { OrderFormData, PaymentMethod, DeliveryType } from '../../types';
 import whatsappLogo from '../../assets/images/icons/whatsapp.png';
-import nequiLogo from '../../assets/images/icons/nequi.png';
+import nequiIcon from '../../assets/images/icons/nequi_icon.png';
 import './OrderModal.css';
 
 const INITIAL_FORM: OrderFormData = {
@@ -22,29 +22,66 @@ const INITIAL_FORM: OrderFormData = {
   paymentMethod: 'whatsapp',
 };
 
-/* ── Nequi instructions box ── */
-const NequiBox = () => (
-  <div className="nequi-box">
-    <div className="nequi-box__title">
-      <img src={nequiLogo} alt="Logo Nequi" className="nequi-box__logo" />
-      <span>Instrucciones de Pago con Nequi</span>
-    </div>
-    <p className="nequi-box__number">📱 {CONTACT.nequiNumber}</p>
-    <div className="nequi-box__steps">
-      {[
-        'Abre tu app de Nequi',
-        `Envía el total del pedido al número ${CONTACT.nequiNumber}`,
-        'Toma una captura del comprobante',
-        'Haz clic en "Confirmar por WhatsApp" y adjunta tu comprobante',
-      ].map((step, i) => (
-        <div key={i} className="nequi-step">
-          <span className="nequi-step__num">{i + 1}</span>
-          <span>{step}</span>
+/* ── Nequi instructions box con botón de copia ── */
+const NequiBox = () => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyNumber = () => {
+    navigator.clipboard.writeText(CONTACT.nequiNumber);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="nequi-box">
+      <div className="nequi-box__title">
+        <img src={nequiIcon} alt="Logo Nequi" className="nequi-box__logo" />
+        <span>Instrucciones de Pago con Nequi</span>
+      </div>
+
+      <div className="nequi-box__number-row">
+        <div className="nequi-box__number-wrap">
+          <span className="nequi-box__number-label">Número Nequi:</span>
+          <span className="nequi-box__number">{CONTACT.nequiNumber}</span>
         </div>
-      ))}
+        <button
+          id="copy-nequi-btn"
+          type="button"
+          className={`nequi-copy-btn ${copied ? 'nequi-copy-btn--copied' : ''}`}
+          onClick={handleCopyNumber}
+          title="Copiar número Nequi"
+          aria-label="Copiar número Nequi al portapapeles"
+        >
+          {copied ? (
+            <>
+              <Check size={14} />
+              <span>¡Copiado!</span>
+            </>
+          ) : (
+            <>
+              <Copy size={14} />
+              <span>Copiar</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      <div className="nequi-box__steps">
+        {[
+          'Abre tu app de Nequi',
+          `Envía el total del pedido al número ${CONTACT.nequiNumber}`,
+          'Toma una captura del comprobante',
+          'Haz clic en "Confirmar y Enviar Ticket por WhatsApp" y adjunta tu comprobante',
+        ].map((step, i) => (
+          <div key={i} className="nequi-step">
+            <span className="nequi-step__num">{i + 1}</span>
+            <span>{step}</span>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /* ── Main Order Modal ── */
 interface OrderModalProps {
@@ -277,7 +314,7 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
               aria-pressed={form.paymentMethod === 'nequi'}
             >
               <div className="payment-option__icon-wrap">
-                <img src={nequiLogo} alt="Logo Nequi" className="payment-option__logo" />
+                <img src={nequiIcon} alt="Logo Nequi" className="payment-option__logo" />
               </div>
               <span className="payment-option__name">Nequi</span>
               <span className="payment-option__desc">Transferencia inmediata</span>
@@ -298,7 +335,7 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
           disabled={!isValid}
         >
           {form.paymentMethod === 'nequi'
-            ? '💜 Confirmar y Enviar Ticket por WhatsApp'
+            ? '📲 Confirmar y Enviar Ticket por WhatsApp'
             : '📲 Enviar Ticket de Pedido por WhatsApp'}
         </Button>
       </form>

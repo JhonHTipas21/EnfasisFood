@@ -30,7 +30,7 @@ export const buildOrderMessage = (
     .join('\n');
 
   const deliveryBadge = isDelivery ? '🛵 Domicilio (+$3.000)' : '🏬 Recoger en local ($0)';
-  const paymentBadge = formData.paymentMethod === 'nequi' ? '💜 Nequi' : '💵 Efectivo contra entrega';
+  const paymentBadge = formData.paymentMethod === 'nequi' ? 'Nequi (Transferencia)' : '💵 Efectivo contra entrega';
 
   return [
     `*📋 ÉNFASIS FOOD — TICKET DE PEDIDO 📋*`,

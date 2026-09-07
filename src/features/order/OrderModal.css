@@ -219,12 +219,64 @@
   object-fit: contain;
 }
 
+.nequi-box__number-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px 16px;
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: var(--radius-md);
+}
+
+.nequi-box__number-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nequi-box__number-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gold);
+  font-weight: 700;
+}
+
 .nequi-box__number {
-  font-size: var(--text-xl);
+  font-size: clamp(1.15rem, 3.5vw, 1.45rem);
   font-weight: 800;
   color: var(--color-white);
   letter-spacing: 0.1em;
   font-family: var(--font-display);
+}
+
+.nequi-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--color-gold);
+  color: var(--color-black);
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.nequi-copy-btn:hover {
+  background: var(--color-gold-light);
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(201, 162, 39, 0.4);
+}
+
+.nequi-copy-btn--copied {
+  background: #25d366;
+  color: #ffffff;
 }
 
 .nequi-box__steps {
