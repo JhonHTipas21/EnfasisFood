@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { X, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useCartStore } from '../../stores/cartStore';
-import { formatPrice, CONTACT } from '../../constants/business';
+import { formatPrice } from '../../constants/business';
 import { Button } from '../../components/ui/Button';
 import { OrderModal } from '../order/OrderModal';
 import './CartDrawer.css';
@@ -25,7 +25,6 @@ export const CartDrawer = () => {
   if (!isOpen) return null;
 
   const total = totalPrice();
-  const totalWithDelivery = total + CONTACT.deliveryCost;
 
   const handleGoToMenu = () => {
     closeCart();
@@ -136,17 +135,17 @@ export const CartDrawer = () => {
             <div className="cart-drawer__footer">
               <div className="cart-drawer__summary">
                 <div className="cart-drawer__summary-row">
-                  <span>Subtotal</span>
+                  <span>Productos ({items.reduce((acc, it) => acc + it.quantity, 0)})</span>
                   <span>{formatPrice(total)}</span>
                 </div>
                 <div className="cart-drawer__summary-row">
                   <span>Domicilio</span>
-                  <span>{formatPrice(CONTACT.deliveryCost)}</span>
+                  <span style={{ color: 'var(--color-gold)' }}>+$3.000 / $0 en local</span>
                 </div>
                 <div className="cart-drawer__total-row">
-                  <span className="cart-drawer__total-label">Total</span>
+                  <span className="cart-drawer__total-label">Total Productos</span>
                   <span className="cart-drawer__total-price">
-                    {formatPrice(totalWithDelivery)}
+                    {formatPrice(total)}
                   </span>
                 </div>
               </div>

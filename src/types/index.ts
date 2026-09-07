@@ -27,11 +27,13 @@ export interface CartStore {
 
 // --- Order Types ---
 export type PaymentMethod = 'whatsapp' | 'nequi';
+export type DeliveryType = 'delivery' | 'pickup';
 
 export interface OrderFormData {
   name: string;
-  address: string;
   phone: string;
+  deliveryType: DeliveryType;
+  address: string;
   notes: string;
   paymentMethod: PaymentMethod;
 }

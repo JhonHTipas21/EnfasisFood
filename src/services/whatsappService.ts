@@ -1,54 +1,77 @@
 // ================================================================
-// ÉNFASIS FOOD — WhatsApp Service
-// Principio SOLID: Single Responsibility — solo generación de links
+// ÉNFASIS FOOD — WhatsApp Service (Ticket Creativo)
+// Principio SOLID: Single Responsibility — Formateo y envío de tickets
 // ================================================================
 import { CONTACT, formatPrice } from '../constants/business';
 import type { OrderFormData, OrderItem } from '../types';
 
-const buildOrderMessage = (
+export const buildOrderMessage = (
   formData: OrderFormData,
   items: OrderItem[],
-  total: number
+  subtotal: number
 ): string => {
-  const header = `🍟 *PEDIDO ÉNFASIS FOOD*`;
-  const separator = `━━━━━━━━━━━━━━━━━━━━`;
+  const isDelivery = formData.deliveryType === 'delivery';
+  const deliveryCost = isDelivery ? CONTACT.deliveryCost : 0;
+  const total = subtotal + deliveryCost;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+  const timeStr = now.toLocaleTimeString('es-CO', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   const itemLines = items
-    .map((item) => `• ${item.name} x${item.quantity} — ${formatPrice(item.price * item.quantity)}`)
+    .map((item) => `│  ▫️ *${item.quantity}x* ${item.name}\n│     └─ ${formatPrice(item.price * item.quantity)}`)
     .join('\n');
 
-  const deliveryCost = CONTACT.deliveryCost;
-  const totalWithDelivery = total + deliveryCost;
+  const deliveryBadge = isDelivery ? '🛵 Domicilio a tu puerta' : '🏬 Recoger en punto / Local';
+  const paymentBadge = formData.paymentMethod === 'nequi' ? '💜 Nequi (Transferencia)' : '💵 Efectivo (Contra entrega)';
 
-  const lines = [
-    header,
-    separator,
-    `👤 *Cliente:* ${formData.name}`,
-    `📍 *Dirección:* ${formData.address}`,
-    `📱 *Teléfono:* ${formData.phone}`,
-    separator,
-    `🛒 *Pedido:*`,
+  return [
+    `╔═══════════════════════════╗`,
+    `║   🍟 *ÉNFASIS FOOD* 🍟    ║`,
+    `║    _Ticket Oficial de Pedido_   ║`,
+    `╚═══════════════════════════╝`,
+    `📅 *Fecha:* ${dateStr} - ${timeStr}`,
+    ``,
+    `👤 *DATOS DEL CLIENTE:*`,
+    `├ 🏷️ *Nombre:* ${formData.name}`,
+    `├ 📱 *Teléfono:* ${formData.phone}`,
+    `├ 🛵 *Modalidad:* ${deliveryBadge}`,
+    isDelivery ? `└ 📍 *Dirección:* ${formData.address}` : `└ 📍 *Entrega:* Recoge en local`,
+    ``,
+    `📋 *DETALLE DEL PEDIDO:*`,
+    `┌───────────────────────────┐`,
     itemLines,
-    separator,
-    `💰 *Subtotal:* ${formatPrice(total)}`,
-    `🚚 *Domicilio:* ${formatPrice(deliveryCost)}`,
-    `✅ *TOTAL:* ${formatPrice(totalWithDelivery)}`,
-    separator,
-    `💳 *Pago:* ${formData.paymentMethod === 'nequi' ? 'Nequi' : 'Contra entrega / WhatsApp'}`,
-    formData.notes ? `📝 *Notas:* ${formData.notes}` : '',
+    `└───────────────────────────┘`,
+    ``,
+    `💳 *LIQUIDACIÓN:*`,
+    `├ 💰 *Subtotal:* ${formatPrice(subtotal)}`,
+    `├ 🛵 *Domicilio:* ${isDelivery ? formatPrice(deliveryCost) : 'GRATIS ($0)'}`,
+    `└ 🏷️ *TOTAL A PAGAR:* *${formatPrice(total)}*`,
+    ``,
+    `💵 *Método de pago:* ${paymentBadge}`,
+    formData.notes ? `📝 *Instrucciones:* ${formData.notes}` : '',
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `✨ _¡Muchas gracias por elegir Énfasis Food!_`,
+    `🍟 _Sabor que marca la diferencia._`,
   ]
     .filter(Boolean)
     .join('\n');
-
-  return lines;
 };
 
 export const buildWhatsAppUrl = (
   formData: OrderFormData,
   items: OrderItem[],
-  total: number
+  subtotal: number
 ): string => {
-  const message = buildOrderMessage(formData, items, total);
+  const message = buildOrderMessage(formData, items, subtotal);
   const encodedMessage = encodeURIComponent(message);
   return `https://api.whatsapp.com/send/?phone=${CONTACT.whatsapp}&text=${encodedMessage}`;
 };
@@ -56,8 +79,8 @@ export const buildWhatsAppUrl = (
 export const openWhatsApp = (
   formData: OrderFormData,
   items: OrderItem[],
-  total: number
+  subtotal: number
 ): void => {
-  const url = buildWhatsAppUrl(formData, items, total);
+  const url = buildWhatsAppUrl(formData, items, subtotal);
   window.open(url, '_blank', 'noopener,noreferrer');
 };

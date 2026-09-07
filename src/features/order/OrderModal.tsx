@@ -1,20 +1,23 @@
 // ================================================================
-// ÉNFASIS FOOD — Order Modal Feature (Pedido + Pago)
+// ÉNFASIS FOOD — Order Modal Feature (Pedido + Entrega + Pago)
 // ================================================================
 import { useState } from 'react';
-import { ShoppingBag, MessageCircle, CreditCard } from 'lucide-react';
+import { ShoppingBag, Bike, Store } from 'lucide-react';
 import { Modal } from '../../components/ui/Modal';
 import { Button } from '../../components/ui/Button';
 import { useCartStore } from '../../stores/cartStore';
 import { openWhatsApp } from '../../services/whatsappService';
 import { formatPrice, CONTACT } from '../../constants/business';
-import type { OrderFormData, PaymentMethod } from '../../types';
+import type { OrderFormData, PaymentMethod, DeliveryType } from '../../types';
+import whatsappLogo from '../../assets/images/icons/whatsapp.png';
+import nequiLogo from '../../assets/images/icons/nequi.png';
 import './OrderModal.css';
 
 const INITIAL_FORM: OrderFormData = {
   name: '',
-  address: '',
   phone: '',
+  deliveryType: 'delivery',
+  address: '',
   notes: '',
   paymentMethod: 'whatsapp',
 };
@@ -22,17 +25,17 @@ const INITIAL_FORM: OrderFormData = {
 /* ── Nequi instructions box ── */
 const NequiBox = () => (
   <div className="nequi-box">
-    <p className="nequi-box__title">
-      <CreditCard size={18} />
-      Paga por Nequi
-    </p>
+    <div className="nequi-box__title">
+      <img src={nequiLogo} alt="Logo Nequi" className="nequi-box__logo" />
+      <span>Instrucciones de Pago con Nequi</span>
+    </div>
     <p className="nequi-box__number">📱 {CONTACT.nequiNumber}</p>
     <div className="nequi-box__steps">
       {[
         'Abre tu app de Nequi',
-        `Envía el valor total al número ${CONTACT.nequiNumber}`,
-        'Toma una captura del pago',
-        'Haz clic en "Confirmar por WhatsApp" y adjunta el comprobante',
+        `Envía el total del pedido al número ${CONTACT.nequiNumber}`,
+        'Toma una captura del comprobante',
+        'Haz clic en "Confirmar por WhatsApp" y adjunta tu comprobante',
       ].map((step, i) => (
         <div key={i} className="nequi-step">
           <span className="nequi-step__num">{i + 1}</span>
@@ -53,8 +56,10 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
   const [form, setForm] = useState<OrderFormData>(INITIAL_FORM);
   const { items, totalPrice, clearCart, closeCart } = useCartStore();
 
-  const total = totalPrice();
-  const totalWithDelivery = total + CONTACT.deliveryCost;
+  const subtotal = totalPrice();
+  const isDelivery = form.deliveryType === 'delivery';
+  const deliveryFee = isDelivery ? CONTACT.deliveryCost : 0;
+  const totalWithDelivery = subtotal + deliveryFee;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -63,11 +68,18 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleDeliverySelect = (type: DeliveryType) => {
+    setForm((prev) => ({ ...prev, deliveryType: type }));
+  };
+
   const handlePaymentSelect = (method: PaymentMethod) => {
     setForm((prev) => ({ ...prev, paymentMethod: method }));
   };
 
-  const isValid = form.name.trim() && form.address.trim() && form.phone.trim();
+  const isValid =
+    form.name.trim() &&
+    form.phone.trim() &&
+    (!isDelivery || form.address.trim());
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +91,7 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
       price: item.price,
     }));
 
-    openWhatsApp(form, orderItems, total);
+    openWhatsApp(form, orderItems, subtotal);
     clearCart();
     closeCart();
     onClose();
@@ -87,7 +99,7 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Realizar Pedido 🍟">
+    <Modal isOpen={isOpen} onClose={onClose} title="Finalizar Pedido 🍟">
       <form
         id="order-form"
         className="order-form"
@@ -98,7 +110,7 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
         <div className="order-summary">
           <div className="order-summary__header">
             <ShoppingBag size={16} />
-            Resumen de tu pedido
+            <span>Resumen del Pedido</span>
           </div>
           <div className="order-summary__items">
             {items.map((item) => (
@@ -109,30 +121,68 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
                 <span>{formatPrice(item.price * item.quantity)}</span>
               </div>
             ))}
-            <div className="order-summary__item">
-              <span>Domicilio</span>
-              <span>{formatPrice(CONTACT.deliveryCost)}</span>
+            <div className="order-summary__item order-summary__item--delivery">
+              <span>
+                {isDelivery ? '🛵 Servicio de Domicilio' : '🏬 Recoger en punto'}
+              </span>
+              <span>{isDelivery ? formatPrice(deliveryFee) : 'GRATIS ($0)'}</span>
             </div>
           </div>
           <div className="order-summary__total">
-            <span className="order-summary__total-label">Total</span>
+            <span className="order-summary__total-label">Total a Pagar</span>
             <span className="order-summary__total-price">
               {formatPrice(totalWithDelivery)}
             </span>
           </div>
         </div>
 
+        {/* Modalidad de entrega */}
+        <div className="form-field">
+          <span className="form-label">
+            ¿Cómo deseas recibir tu pedido? <span>*</span>
+          </span>
+          <div className="delivery-selector">
+            <button
+              id="delivery-opt-btn"
+              type="button"
+              className={`delivery-option ${isDelivery ? 'delivery-option--selected' : ''}`}
+              onClick={() => handleDeliverySelect('delivery')}
+              aria-pressed={isDelivery}
+            >
+              <Bike size={20} />
+              <div className="delivery-option__text">
+                <span className="delivery-option__title">A Domicilio</span>
+                <span className="delivery-option__price">+ $3.000 COP</span>
+              </div>
+            </button>
+
+            <button
+              id="pickup-opt-btn"
+              type="button"
+              className={`delivery-option ${!isDelivery ? 'delivery-option--selected' : ''}`}
+              onClick={() => handleDeliverySelect('pickup')}
+              aria-pressed={!isDelivery}
+            >
+              <Store size={20} />
+              <div className="delivery-option__text">
+                <span className="delivery-option__title">Recoger en Local</span>
+                <span className="delivery-option__price">Sin costo ($0)</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
         {/* Customer Data */}
         <div className="form-field">
           <label htmlFor="order-name" className="form-label">
-            Nombre <span>*</span>
+            Tu Nombre Completo <span>*</span>
           </label>
           <input
             id="order-name"
             name="name"
             type="text"
             className="form-input"
-            placeholder="Tu nombre completo"
+            placeholder="Ej: Carlos Gómez"
             value={form.name}
             onChange={handleChange}
             required
@@ -141,32 +191,15 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
         </div>
 
         <div className="form-field">
-          <label htmlFor="order-address" className="form-label">
-            Dirección de entrega <span>*</span>
-          </label>
-          <input
-            id="order-address"
-            name="address"
-            type="text"
-            className="form-input"
-            placeholder="Barrio, Calle, Casa/Apto..."
-            value={form.address}
-            onChange={handleChange}
-            required
-            autoComplete="street-address"
-          />
-        </div>
-
-        <div className="form-field">
           <label htmlFor="order-phone" className="form-label">
-            Teléfono <span>*</span>
+            Teléfono o WhatsApp <span>*</span>
           </label>
           <input
             id="order-phone"
             name="phone"
             type="tel"
             className="form-input"
-            placeholder="3XX XXX XXXX"
+            placeholder="Ej: 320 506 9834"
             value={form.phone}
             onChange={handleChange}
             required
@@ -174,15 +207,39 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
           />
         </div>
 
+        {isDelivery ? (
+          <div className="form-field">
+            <label htmlFor="order-address" className="form-label">
+              Dirección de Entrega <span>*</span>
+            </label>
+            <input
+              id="order-address"
+              name="address"
+              type="text"
+              className="form-input"
+              placeholder="Barrio, Calle, Carrera, Casa o Apto..."
+              value={form.address}
+              onChange={handleChange}
+              required
+              autoComplete="street-address"
+            />
+          </div>
+        ) : (
+          <div className="pickup-notice">
+            <Store size={18} />
+            <span>Recogerás tu pedido en nuestro punto físico Énfasis Food.</span>
+          </div>
+        )}
+
         <div className="form-field">
           <label htmlFor="order-notes" className="form-label">
-            Notas adicionales
+            Instrucciones o preferencias (Opcional)
           </label>
           <textarea
             id="order-notes"
             name="notes"
             className="form-textarea"
-            placeholder="Preferencias, instrucciones especiales..."
+            placeholder="Ej: Sin tártara, salsa aparte, timbre 201..."
             value={form.notes}
             onChange={handleChange}
           />
@@ -190,7 +247,9 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
 
         {/* Payment Method */}
         <div className="form-field">
-          <span className="form-label">Método de pago <span>*</span></span>
+          <span className="form-label">
+            Método de Pago <span>*</span>
+          </span>
           <div className="payment-selector">
             <button
               id="payment-whatsapp-btn"
@@ -199,11 +258,11 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
               onClick={() => handlePaymentSelect('whatsapp')}
               aria-pressed={form.paymentMethod === 'whatsapp'}
             >
-              <span className="payment-option__icon">
-                <MessageCircle size={28} color="#25d366" />
-              </span>
-              <span className="payment-option__name">WhatsApp</span>
-              <span className="payment-option__desc">Confirma y paga contra entrega</span>
+              <div className="payment-option__icon-wrap">
+                <img src={whatsappLogo} alt="Logo WhatsApp" className="payment-option__logo" />
+              </div>
+              <span className="payment-option__name">Efectivo / WhatsApp</span>
+              <span className="payment-option__desc">Paga contra entrega al recibir</span>
             </button>
 
             <button
@@ -213,9 +272,11 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
               onClick={() => handlePaymentSelect('nequi')}
               aria-pressed={form.paymentMethod === 'nequi'}
             >
-              <span className="payment-option__icon">💜</span>
+              <div className="payment-option__icon-wrap">
+                <img src={nequiLogo} alt="Logo Nequi" className="payment-option__logo" />
+              </div>
               <span className="payment-option__name">Nequi</span>
-              <span className="payment-option__desc">Transfiere y adjunta el comprobante</span>
+              <span className="payment-option__desc">Transferencia inmediata</span>
             </button>
           </div>
         </div>
@@ -233,8 +294,8 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
           disabled={!isValid}
         >
           {form.paymentMethod === 'nequi'
-            ? '✅ Confirmar por WhatsApp'
-            : '📲 Enviar pedido por WhatsApp'}
+            ? '💜 Confirmar y Enviar Ticket por WhatsApp'
+            : '📲 Enviar Ticket de Pedido por WhatsApp'}
         </Button>
       </form>
     </Modal>
