@@ -8,6 +8,7 @@ import { MenuSection } from './features/menu/MenuSection';
 import { Gallery } from './components/sections/Gallery';
 import { SocialSection, Footer } from './components/sections/Social';
 import { CartDrawer } from './features/cart/CartDrawer';
+import { MusicPlayer } from './components/ui/MusicPlayer';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
 
       {/* Global overlay components */}
       <CartDrawer />
+      <MusicPlayer />
     </>
   );
 }
