@@ -71,7 +71,7 @@ const NequiBox = () => {
           'Abre tu app de Nequi',
           `Envía el total del pedido al número ${CONTACT.nequiNumber}`,
           'Toma una captura del comprobante',
-          'Haz clic en "Confirmar y Enviar Ticket por WhatsApp" y adjunta tu comprobante',
+          'Haz clic en "Confirmar por WhatsApp" y adjunta tu comprobante',
         ].map((step, i) => (
           <div key={i} className="nequi-step">
             <span className="nequi-step__num">{i + 1}</span>
@@ -333,10 +333,11 @@ export const OrderModal = ({ isOpen, onClose }: OrderModalProps) => {
           size="lg"
           fullWidth
           disabled={!isValid}
+          className="order-submit-btn"
         >
           {form.paymentMethod === 'nequi'
-            ? '📲 Confirmar y Enviar Ticket por WhatsApp'
-            : '📲 Enviar Ticket de Pedido por WhatsApp'}
+            ? 'Confirmar por WhatsApp 📲'
+            : 'Pedir por WhatsApp 📲'}
         </Button>
       </form>
     </Modal>

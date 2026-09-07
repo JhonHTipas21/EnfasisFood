@@ -370,9 +370,24 @@
   font-family: var(--font-display);
 }
 
+.order-submit-btn {
+  white-space: normal !important;
+  text-align: center;
+  line-height: 1.35;
+  padding: 14px 18px !important;
+  font-size: clamp(0.95rem, 3.8vw, 1.1rem) !important;
+  box-shadow: 0 4px 20px rgba(201, 162, 39, 0.35);
+  letter-spacing: 0.02em;
+}
+
 @media (max-width: 480px) {
   .delivery-selector,
   .payment-selector {
     grid-template-columns: 1fr;
+  }
+
+  .order-submit-btn {
+    padding: 13px 14px !important;
+    font-size: 0.95rem !important;
   }
 }

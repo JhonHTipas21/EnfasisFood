@@ -29,7 +29,18 @@
 .btn--sm  { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); }
 .btn--md  { padding: var(--space-3) var(--space-6); font-size: var(--text-base); }
 .btn--lg  { padding: var(--space-4) var(--space-8); font-size: var(--text-lg); }
-.btn--full { width: 100%; }
+.btn--full {
+  width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .btn--lg {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+  }
+}
 
 /* Primary — Gold CTA */
 .btn--primary {
