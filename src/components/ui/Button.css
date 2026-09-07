@@ -1,0 +1,89 @@
+/* ================================================================
+   Button Component Styles
+   ================================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  outline: none;
+  border: 2px solid transparent;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Sizes */
+.btn--sm  { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); }
+.btn--md  { padding: var(--space-3) var(--space-6); font-size: var(--text-base); }
+.btn--lg  { padding: var(--space-4) var(--space-8); font-size: var(--text-lg); }
+.btn--full { width: 100%; }
+
+/* Primary — Gold CTA */
+.btn--primary {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  color: var(--color-black);
+  border-color: var(--color-gold);
+}
+.btn--primary:hover {
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold));
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
+}
+.btn--primary:active { transform: translateY(0); }
+
+/* Secondary — outlined gold */
+.btn--secondary {
+  background: transparent;
+  color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+.btn--secondary:hover {
+  background: var(--color-gold-glow);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
+}
+
+/* Ghost */
+.btn--ghost {
+  background: transparent;
+  color: var(--color-white-dim);
+  border-color: var(--color-dark-border);
+}
+.btn--ghost:hover {
+  color: var(--color-white);
+  border-color: var(--color-silver-dim);
+  background: rgba(255,255,255,0.05);
+}
+
+/* Danger */
+.btn--danger {
+  background: transparent;
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+.btn--danger:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+/* Loading spinner */
+.btn__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
