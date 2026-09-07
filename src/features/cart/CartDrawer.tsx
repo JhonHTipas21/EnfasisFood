@@ -27,6 +27,16 @@ export const CartDrawer = () => {
   const total = totalPrice();
   const totalWithDelivery = total + CONTACT.deliveryCost;
 
+  const handleGoToMenu = () => {
+    closeCart();
+    setTimeout(() => {
+      const menuEl = document.getElementById('menu');
+      if (menuEl) {
+        menuEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 120);
+  };
+
   return (
     <>
       <div className="cart-overlay" onClick={closeCart} aria-hidden="true" />
@@ -60,8 +70,8 @@ export const CartDrawer = () => {
             <p style={{ fontSize: 'var(--text-sm)' }}>
               Agrega algo delicioso del menú
             </p>
-            <Button id="cart-go-menu-btn" variant="secondary" size="sm" onClick={closeCart}>
-              Ver Menú
+            <Button id="cart-go-menu-btn" variant="secondary" size="sm" onClick={handleGoToMenu}>
+              Ver Menú 🍟
             </Button>
           </div>
         ) : (
