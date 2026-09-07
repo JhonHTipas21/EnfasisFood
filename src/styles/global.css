@@ -1,0 +1,204 @@
+/* ================================================================
+   ÉNFASIS FOOD — Design Tokens & Global Styles
+   Principio SOLID: Single Responsibility — solo variables y reset
+   ================================================================ */
+
+/* --- Google Fonts Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap');
+
+/* --- CSS Custom Properties (Design Tokens) --- */
+:root {
+  /* Brand Colors */
+  --color-black:       #080808;
+  --color-dark:        #101010;
+  --color-dark-card:   #181818;
+  --color-dark-border: #2a2a2a;
+  --color-gold:        #c9a227;
+  --color-gold-light:  #e8c048;
+  --color-gold-dark:   #8b6914;
+  --color-gold-glow:   rgba(201, 162, 39, 0.25);
+  --color-silver:      #c0c0c0;
+  --color-silver-dim:  #777777;
+  --color-white:       #f5f5f5;
+  --color-white-dim:   #aaaaaa;
+
+  /* Semantic Colors */
+  --color-success:     #4caf50;
+  --color-error:       #f44336;
+  --color-overlay:     rgba(0, 0, 0, 0.82);
+  --color-glass:       rgba(16, 16, 16, 0.85);
+  --color-glass-border:rgba(201, 162, 39, 0.18);
+
+  /* Typography */
+  --font-primary:   'Outfit', sans-serif;
+  --font-display:   'Playfair Display', serif;
+
+  /* Font Sizes (fluid) */
+  --text-xs:   clamp(0.7rem,  1.5vw, 0.8rem);
+  --text-sm:   clamp(0.85rem, 2vw,   0.95rem);
+  --text-base: clamp(1rem,    2.5vw, 1.1rem);
+  --text-lg:   clamp(1.1rem,  3vw,   1.3rem);
+  --text-xl:   clamp(1.3rem,  4vw,   1.6rem);
+  --text-2xl:  clamp(1.6rem,  5vw,   2.1rem);
+  --text-3xl:  clamp(2rem,    6vw,   3rem);
+  --text-4xl:  clamp(2.5rem,  8vw,   4.2rem);
+  --text-5xl:  clamp(3rem,    10vw,  6rem);
+
+  /* Spacing */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Border Radius */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-gold:   0 0 20px rgba(201, 162, 39, 0.35), 0 0 60px rgba(201, 162, 39, 0.1);
+  --shadow-card:   0 8px 32px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-modal:  0 24px 80px rgba(0, 0, 0, 0.85);
+
+  /* Transitions */
+  --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base:   300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow:   500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index scale */
+  --z-base:    1;
+  --z-dropdown:10;
+  --z-sticky:  20;
+  --z-modal:   50;
+  --z-toast:   100;
+
+  /* Layout */
+  --nav-height:  70px;
+  --max-width:   1280px;
+  --section-pad: clamp(3rem, 8vw, 6rem);
+}
+
+/* --- CSS Reset --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, video {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+/* --- Utility Classes --- */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 5vw, 2rem);
+}
+
+.section {
+  padding: var(--section-pad) 0;
+}
+
+.text-gold      { color: var(--color-gold); }
+.text-silver    { color: var(--color-silver); }
+.text-dim       { color: var(--color-white-dim); }
+.text-center    { text-align: center; }
+.font-display   { font-family: var(--font-display); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* --- Scrollbar personalizada --- */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: var(--color-dark); }
+::-webkit-scrollbar-thumb  { background: var(--color-gold-dark); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
+
+/* --- Animations globales --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
+  50%       { box-shadow: 0 0 0 10px rgba(201, 162, 39, 0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s var(--transition-base) forwards;
+}
