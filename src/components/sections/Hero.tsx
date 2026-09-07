@@ -1,23 +1,37 @@
 // ================================================================
 // ÉNFASIS FOOD — Hero Section (Video Banner)
 // ================================================================
+import { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
-import videoSrc from '../../assets/video/banner.mp4';
-import logoImg from '../../assets/images/logo.jpeg';
+import videoSrc from '../../assets/video/videobanerofi.mp4';
 import './Hero.css';
 
-const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
-  id: i,
-  size: Math.random() * 4 + 2,
-  left: `${Math.random() * 100}%`,
-  duration: `${Math.random() * 6 + 6}s`,
-  delay: `${Math.random() * 5}s`,
-}));
-
 export const Hero = () => {
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleScrollToMenu = () => {
+    const menuEl = document.getElementById('menu');
+    if (menuEl) {
+      menuEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="inicio" className="hero" aria-label="Sección de bienvenida">
-      {/* Video Banner */}
+      {/* Video Banner Oficial */}
       <video
         className="hero__video"
         src={videoSrc}
@@ -28,38 +42,12 @@ export const Hero = () => {
         aria-hidden="true"
       />
 
-      {/* Particles */}
-      <div className="hero__particles" aria-hidden="true">
-        {PARTICLES.map((p) => (
-          <span
-            key={p.id}
-            className="hero__particle"
-            style={{
-              width: p.size,
-              height: p.size,
-              left: p.left,
-              bottom: `${Math.random() * 30}%`,
-              ['--duration' as string]: p.duration,
-              ['--delay' as string]: p.delay,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Overlays */}
+      {/* Overlays elegantes para contraste y calidez dorada */}
       <div className="hero__overlay" aria-hidden="true" />
       <div className="hero__shimmer" aria-hidden="true" />
 
       {/* Content */}
       <div className="hero__content">
-        <img
-          src={logoImg}
-          alt="Logo Énfasis Food"
-          className="hero__logo"
-          width={130}
-          height={130}
-        />
-
         <p className="hero__eyebrow">🍟 Sabor que marca la diferencia</p>
 
         <h1 className="hero__title">
@@ -69,7 +57,7 @@ export const Hero = () => {
 
         <p className="hero__subtitle">
           Ingredientes frescos, sazón única y el cariño de siempre.
-          Pídela a domicilio y hazla llegar hasta tu puerta.
+          Pídela a domicilio y hazla llegar caliente hasta tu puerta.
         </p>
 
         <div className="hero__cta-group">
@@ -77,31 +65,21 @@ export const Hero = () => {
             id="hero-ver-menu-btn"
             variant="primary"
             size="lg"
-            onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={handleScrollToMenu}
           >
             Ver el Menú 🍟
-          </Button>
-          <Button
-            id="hero-pedir-btn"
-            variant="secondary"
-            size="lg"
-            onClick={() =>
-              window.open(
-                'https://api.whatsapp.com/send/?phone=573205069834',
-                '_blank',
-                'noopener,noreferrer'
-              )
-            }
-          >
-            Pedir por WhatsApp
           </Button>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="hero__scroll-indicator" aria-hidden="true">
+      {/* Scroll indicator no invasivo — se desvanece al deslizar */}
+      <div
+        className={`hero__scroll-indicator ${hasScrolled ? 'hero__scroll-indicator--hidden' : ''}`}
+        aria-hidden="true"
+        onClick={handleScrollToMenu}
+      >
         <div className="hero__scroll-dot" />
-        <span>Scroll</span>
+        <span>Desliza para ver el menú</span>
       </div>
     </section>
   );
