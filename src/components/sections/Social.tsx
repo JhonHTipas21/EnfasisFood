@@ -6,6 +6,9 @@ import { useIntersection } from '../../hooks/useIntersection';
 import { SectionHeader } from '../ui/SectionHeader';
 import { CONTACT, SOCIAL_URLS } from '../../constants/business';
 import logoImg from '../../assets/images/logo.jpeg';
+import whatsappLogo from '../../assets/images/icons/whatsapp.png';
+import instagramLogo from '../../assets/images/icons/instagram.png';
+import tiktokLogo from '../../assets/images/icons/tiktok.png';
 import './Social.css';
 
 const SOCIAL_CARDS = [
@@ -13,16 +16,16 @@ const SOCIAL_CARDS = [
     id: 'whatsapp',
     name: 'WhatsApp',
     handle: CONTACT.whatsappDisplay,
-    icon: '💬',
+    logo: whatsappLogo,
     href: SOCIAL_URLS.whatsapp,
-    cta: 'Pide ahora →',
+    cta: 'Escríbenos →',
     className: 'social-card--whatsapp',
   },
   {
     id: 'instagram',
     name: 'Instagram',
     handle: `@${CONTACT.instagram}`,
-    icon: '📸',
+    logo: instagramLogo,
     href: SOCIAL_URLS.instagram,
     cta: 'Síguenos →',
     className: 'social-card--instagram',
@@ -31,7 +34,7 @@ const SOCIAL_CARDS = [
     id: 'tiktok',
     name: 'TikTok',
     handle: `@${CONTACT.tiktok}`,
-    icon: '🎵',
+    logo: tiktokLogo,
     href: SOCIAL_URLS.tiktok,
     cta: 'Mira nuestros videos →',
     className: 'social-card--tiktok',
@@ -59,7 +62,7 @@ const SocialCard = ({
       aria-label={`Visitar ${card.name} de Énfasis Food`}
     >
       <div className="social-card__icon" aria-hidden="true">
-        {card.icon}
+        <img src={card.logo} alt={`Logo ${card.name}`} className="social-card__logo-img" />
       </div>
       <p className="social-card__name">{card.name}</p>
       <p className="social-card__handle">{card.handle}</p>
@@ -75,7 +78,7 @@ export const SocialSection = () => (
       <SectionHeader
         eyebrow="Encuéntranos"
         title="Síguenos en Redes"
-        subtitle="Estamos en todas partes. Pide por WhatsApp, síguenos en Instagram y mira nuestros videos en TikTok."
+        subtitle="Estamos en todas partes. Escríbenos por WhatsApp, síguenos en Instagram y mira nuestros videos en TikTok."
         centered
       />
 
@@ -140,8 +143,7 @@ export const Footer = () => (
         <div className="footer__divider" aria-hidden="true" />
 
         <p className="footer__copy">
-          © {new Date().getFullYear()} <span>Énfasis Food</span> · Todos los derechos reservados.
-          Hecho con ❤️ y mucho sabor.
+          © 2026 <span>Énfasis Food</span> · Todos los derechos reservados.
         </p>
       </div>
     </div>
