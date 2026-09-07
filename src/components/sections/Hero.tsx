@@ -3,7 +3,7 @@
 // ================================================================
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
-import videoSrc from '../../assets/video/videobanerofi.mp4';
+import videoSrc from '../../assets/video/README.mp4';
 import './Hero.css';
 
 export const Hero = () => {
