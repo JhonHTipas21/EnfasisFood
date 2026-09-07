@@ -2,11 +2,15 @@
 # ==============================================================================
 # Script: trace_commit.sh
 # Propósito: Realizar commits atómicos y trazables con push automático,
-#            garantizando que nunca se realicen commits vacíos.
+#            garantizando identidad git correcta y nunca commits vacíos.
 # Uso: ./trace_commit.sh "<tipo>" "<ámbito>" "<descripción>" [archivos...]
 # ==============================================================================
 
 set -e
+
+# ── Identidad oficial del proyecto ──────────────────────────────────────────
+GIT_OFFICIAL_NAME="JhonHTipas21"
+GIT_OFFICIAL_EMAIL="jhon.tipas00@usc.edu.co"
 
 TYPE="$1"
 SCOPE="$2"
@@ -21,31 +25,50 @@ if [ -z "$TYPE" ] || [ -z "$SCOPE" ] || [ -z "$DESC" ]; then
   exit 1
 fi
 
-# 1. Verificar si estamos en un repositorio Git
+# 0. VERIFICAR Y FORZAR IDENTIDAD GIT CORRECTA ─────────────────────────────
+echo "🔍 Verificando identidad git..."
+CURRENT_NAME=$(git config user.name 2>/dev/null || echo "")
+CURRENT_EMAIL=$(git config user.email 2>/dev/null || echo "")
+
+if [ "$CURRENT_NAME" != "$GIT_OFFICIAL_NAME" ] || [ "$CURRENT_EMAIL" != "$GIT_OFFICIAL_EMAIL" ]; then
+  echo "⚠️  Identidad incorrecta detectada:"
+  echo "   user.name  actual: '$CURRENT_NAME'  → esperado: '$GIT_OFFICIAL_NAME'"
+  echo "   user.email actual: '$CURRENT_EMAIL' → esperado: '$GIT_OFFICIAL_EMAIL'"
+  echo "🔧 Corrigiendo automáticamente..."
+  git config user.name "$GIT_OFFICIAL_NAME"
+  git config user.email "$GIT_OFFICIAL_EMAIL"
+  git config --global user.name "$GIT_OFFICIAL_NAME"
+  git config --global user.email "$GIT_OFFICIAL_EMAIL"
+  echo "✅ Identidad corregida: $GIT_OFFICIAL_NAME <$GIT_OFFICIAL_EMAIL>"
+else
+  echo "✅ Identidad correcta: $CURRENT_NAME <$CURRENT_EMAIL>"
+fi
+
+# 1. Verificar si estamos en un repositorio Git ─────────────────────────────
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
   echo "❌ Error: El directorio actual no es un repositorio Git válido."
   exit 1
 fi
 
-# 2. Agregar archivos específicos si fueron proporcionados
+# 2. Agregar archivos específicos si fueron proporcionados ──────────────────
 if [ ${#FILES[@]} -gt 0 ]; then
   echo "📦 Preparando archivos para staging: ${FILES[*]}"
   git add "${FILES[@]}"
 fi
 
-# 3. Verificación ESTRICTA contra commits vacíos
+# 3. Verificación ESTRICTA contra commits vacíos ────────────────────────────
 if git diff --cached --quiet; then
   echo "⚠️ ALERTA: No hay cambios preparados en staging (diff vacío)."
   echo "⛔ Abortando operación: Está prohibido generar commits vacíos."
   exit 1
 fi
 
-# 4. Formatear mensaje y realizar commit
+# 4. Formatear mensaje y realizar commit ────────────────────────────────────
 COMMIT_MSG="${TYPE}(${SCOPE}): ${DESC}"
 echo "📝 Creando commit atómico: '$COMMIT_MSG'"
 git commit -m "$COMMIT_MSG"
 
-# 5. Obtener rama actual y sincronizar con remoto
+# 5. Obtener rama actual y sincronizar con remoto ───────────────────────────
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [ -z "$CURRENT_BRANCH" ] || [ "$CURRENT_BRANCH" = "HEAD" ]; then
   CURRENT_BRANCH="main"
@@ -55,4 +78,4 @@ echo "🚀 Subiendo cambios a origin/${CURRENT_BRANCH}..."
 git push -u origin "$CURRENT_BRANCH"
 
 COMMIT_HASH=$(git rev-parse --short HEAD)
-echo "✅ Éxito: Commit [$COMMIT_HASH] subido correctamente a origin/${CURRENT_BRANCH}."
+echo "✅ Éxito: Commit [$COMMIT_HASH] por $GIT_OFFICIAL_NAME subido correctamente a origin/${CURRENT_BRANCH}."

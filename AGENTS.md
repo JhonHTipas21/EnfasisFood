@@ -18,3 +18,9 @@
 4. **Staging Selectivo y Limpieza**:
    - Agrega únicamente los archivos relacionados con el cambio específico que se está versionando.
    - Mantén el archivo `.gitignore` al día para ignorar archivos del sistema operativo (`.DS_Store`), dependencias temporales y artefactos generados.
+
+5. **Identidad Oficial del Contribuidor**:
+   - Todo commit DEBE registrarse obligatoriamente con la identidad oficial del autor:
+     - **Nombre (`user.name`)**: `JhonHTipas21`
+     - **Correo electrónico (`user.email`)**: `jhon.tipas00@usc.edu.co`
+   - Antes de realizar cualquier commit, verificar siempre la identidad en `git config user.name` y `git config user.email` (o utilizar el script `trace_commit.sh`) para garantizar que todas las contribuciones queden vinculadas a la cuenta oficial de GitHub.

@@ -13,6 +13,18 @@ Esta skill establece y automatiza el protocolo estricto de versionamiento del pr
 
 ---
 
+## ⚠️ IDENTIDAD GIT OFICIAL DEL PROYECTO
+
+> Estos datos son **OBLIGATORIOS** y deben estar configurados antes de cualquier commit.
+
+| Campo | Valor |
+|---|---|
+| **user.name** | `JhonHTipas21` |
+| **user.email** | `jhon.tipas00@usc.edu.co` |
+| **Repositorio remoto** | `git@github.com:JhonHTipas21/EnfasisFood.git` |
+
+---
+
 ## 1. Principios Fundamentales
 
 1. **Commits Atómicos y Granulares**:
@@ -65,6 +77,32 @@ El mensaje de cada commit debe seguir el estándar:
 
 Cuando se finalice cualquier funcionalidad, componente, corrección o paso lógico:
 
+### ⚡ Paso 0 (OBLIGATORIO): Verificar y Configurar la Identidad Git
+
+**SIEMPRE** ejecutar esto antes del primer commit de cualquier sesión de trabajo:
+
+```bash
+# Verificar identidad actual
+git config user.name
+git config user.email
+
+# Si NO coinciden con los valores oficiales, corregir INMEDIATAMENTE:
+git config user.name "JhonHTipas21"
+git config user.email "jhon.tipas00@usc.edu.co"
+
+# Verificar también el config global (para evitar herencia incorrecta)
+git config --global user.name "JhonHTipas21"
+git config --global user.email "jhon.tipas00@usc.edu.co"
+
+# Confirmar resultado
+echo "✅ Nombre: $(git config user.name)"
+echo "✅ Email:  $(git config user.email)"
+```
+
+> **¿Por qué es crítico?** Git usa `user.name` y `user.email` para atribuir cada commit al autor correcto.
+> Si están mal configurados, los commits aparecerán con un contribuidor incorrecto en GitHub,
+> como ocurrió con `JhonHTipas` en lugar de `JhonHTipas21`. Esto daña la trazabilidad del proyecto.
+
 ### Paso 1: Verificar el Estado de Archivos Modificados
 ```bash
 git status -s
@@ -113,9 +151,10 @@ Para mayor conveniencia y seguridad, la skill incluye un script ejecutable:
 ```
 
 El script se encarga de:
-1. Validar que el directorio sea un repositorio git.
-2. Hacer staging de los archivos especificados (o verificar los existentes).
-3. Prevenir commits vacíos cancelando si no hay cambios.
-4. Generar el commit con formato estándar.
-5. Ejecutar `git push origin <rama_actual>`.
-6. Mostrar el hash del commit y el estado final.
+1. **Verificar y forzar la identidad git correcta** (`JhonHTipas21` / `jhon.tipas00@usc.edu.co`).
+2. Validar que el directorio sea un repositorio git.
+3. Hacer staging de los archivos especificados (o verificar los existentes).
+4. Prevenir commits vacíos cancelando si no hay cambios.
+5. Generar el commit con formato estándar.
+6. Ejecutar `git push origin <rama_actual>`.
+7. Mostrar el hash del commit y el estado final.
