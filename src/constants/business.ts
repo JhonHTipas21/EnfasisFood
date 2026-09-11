@@ -3,12 +3,12 @@
 // Principio SOLID: Open/Closed — agregar productos sin modificar
 // ================================================================
 
-import producto1 from '../assets/images/producto-1.jpeg';
-import producto2 from '../assets/images/producto-2.jpeg';
-import producto3 from '../assets/images/producto-3.jpeg';
-import producto4 from '../assets/images/producto-4.jpeg';
-import producto5 from '../assets/images/producto-5.jpeg';
-import producto6 from '../assets/images/producto-6.jpeg';
+import sencillaImg from '../assets/images/sencilla.jpeg';
+import especialImg from '../assets/images/especial.jpeg';
+import especialDobleImg from '../assets/images/especialpara2.jpeg';
+import chiquitoImg from '../assets/images/chiquito.jpeg';
+import cosotaImg from '../assets/images/la-cosota.jpeg';
+import sencillaDobleImg from '../assets/images/sencilla-doble.jpeg';
 
 // --- Contacto ---
 export const CONTACT = {
@@ -36,7 +36,8 @@ export const MENU_ITEMS = [
     description: 'Papas fritas crujientes con salchichas doradas, queso fundido y salsas de la casa.',
     price: 15000,
     category: 'salchipapas' as const,
-    image: producto6,
+    image: sencillaImg,
+    imagePosition: 'center 75%',
     tag: 'Clásica',
     popular: false,
   },
@@ -47,7 +48,8 @@ export const MENU_ITEMS = [
     description: 'Doble porción de nuestra salchipapa sencilla. Perfecta para compartir.',
     price: 23000,
     category: 'salchipapas' as const,
-    image: producto5,
+    image: sencillaDobleImg,
+    imagePosition: 'center 60%',
     tag: 'Para 2',
     popular: false,
   },
@@ -58,7 +60,8 @@ export const MENU_ITEMS = [
     description: 'Papas + salchichas con pollo desmenuzado, mazorca tierna y salsas especiales.',
     price: 20000,
     category: 'salchipapas' as const,
-    image: producto1,
+    image: especialImg,
+    imagePosition: 'center 55%',
     tag: 'Favorita',
     popular: true,
   },
@@ -69,7 +72,8 @@ export const MENU_ITEMS = [
     description: 'Doble porción de la Especial. Pollo, mazorca, salchichas y queso gratinado.',
     price: 32000,
     category: 'salchipapas' as const,
-    image: producto2,
+    image: especialDobleImg,
+    imagePosition: 'center 60%',
     tag: 'Para 2',
     popular: false,
   },
@@ -80,7 +84,8 @@ export const MENU_ITEMS = [
     description: 'Tres capas de sabor: papas, salchichas BBQ, pollo y mazorca. Nuestro especial familiar.',
     price: 38000,
     category: 'salchipapas' as const,
-    image: producto3,
+    image: chiquitoImg,
+    imagePosition: 'center 65%',
     tag: 'Familiar',
     popular: true,
   },
@@ -91,7 +96,8 @@ export const MENU_ITEMS = [
     description: 'El rey de las salchipapas. Porción XXL con todo: papas, salchichas, pollo, mazorca y queso gratinado.',
     price: 69000,
     category: 'salchipapas' as const,
-    image: producto4,
+    image: cosotaImg,
+    imagePosition: 'center 75%',
     tag: '⭐ Premium XXL',
     popular: true,
   },

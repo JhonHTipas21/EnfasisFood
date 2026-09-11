@@ -35,6 +35,7 @@ const MenuCard = ({ item }: { item: typeof MENU_ITEMS[number] }) => {
           src={item.image}
           alt={item.name}
           className="menu-card__image"
+          style={{ objectPosition: item.imagePosition }}
           loading="lazy"
           width={300}
           height={220}

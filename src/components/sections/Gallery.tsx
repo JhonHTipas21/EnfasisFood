@@ -3,28 +3,30 @@
 // ================================================================
 import { useIntersection } from '../../hooks/useIntersection';
 import { SectionHeader } from '../ui/SectionHeader';
-import prod1 from '../../assets/images/producto-1.jpeg';
-import prod2 from '../../assets/images/producto-2.jpeg';
-import prod3 from '../../assets/images/producto-3.jpeg';
-import prod4 from '../../assets/images/producto-4.jpeg';
-import prod5 from '../../assets/images/producto-5.jpeg';
+import sencillaImg from '../../assets/images/sencilla.jpeg';
+import especialImg from '../../assets/images/especial.jpeg';
+import especialDobleImg from '../../assets/images/especialpara2.jpeg';
+import chiquitoImg from '../../assets/images/chiquito.jpeg';
+import cosotaImg from '../../assets/images/la-cosota.jpeg';
 import './Gallery.css';
 
 const GALLERY_IMAGES = [
-  { src: prod4, label: 'La Cosota — XXL' },
-  { src: prod1, label: 'Especial' },
-  { src: prod2, label: 'Especial Doble' },
-  { src: prod3, label: 'El Chiquito III' },
-  { src: prod5, label: 'Sencilla Doble' },
+  { src: cosotaImg, label: 'La Cosota — XXL', position: 'center 75%' },
+  { src: especialImg, label: 'Especial', position: 'center 55%' },
+  { src: especialDobleImg, label: 'Especial Doble', position: 'center 60%' },
+  { src: chiquitoImg, label: 'El Chiquito III', position: 'center 65%' },
+  { src: sencillaImg, label: 'Sencilla', position: 'center 75%' },
 ];
 
 const GalleryItem = ({
   src,
   label,
+  position,
   index,
 }: {
   src: string;
   label: string;
+  position?: string;
   index: number;
 }) => {
   const { ref, isVisible } = useIntersection({ threshold: 0.1 });
@@ -35,7 +37,13 @@ const GalleryItem = ({
       className={`gallery-item ${isVisible ? 'gallery-item--visible' : ''}`}
       style={{ transitionDelay: `${index * 0.07}s` }}
     >
-      <img src={src} alt={label} className="gallery-item__img" loading="lazy" />
+      <img
+        src={src}
+        alt={label}
+        className="gallery-item__img"
+        style={position ? { objectPosition: position } : undefined}
+        loading="lazy"
+      />
       <div className="gallery-item__overlay">
         <span className="gallery-item__label">🍟 {label}</span>
       </div>
@@ -54,7 +62,13 @@ export const Gallery = () => (
       />
       <div className="gallery-grid" role="list" aria-label="Imágenes de productos">
         {GALLERY_IMAGES.map((img, i) => (
-          <GalleryItem key={img.src} src={img.src} label={img.label} index={i} />
+          <GalleryItem
+            key={img.src}
+            src={img.src}
+            label={img.label}
+            position={img.position}
+            index={i}
+          />
         ))}
       </div>
     </div>
