@@ -8,7 +8,7 @@ import especialImg from '../assets/images/especial.jpeg';
 import especialDobleImg from '../assets/images/especialpara2.jpeg';
 import chiquitoImg from '../assets/images/chiquito.jpeg';
 import cosotaImg from '../assets/images/la-cosota.jpeg';
-import sencillaDobleImg from '../assets/images/sencilla-doble.jpeg';
+import sencillaDobleImg from '../assets/images/sencilladoblemejorada.jpeg';
 
 // --- Contacto ---
 export const CONTACT = {
